@@ -35,7 +35,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
         return new String[0];
     }
 
-    private String fetchData(String apiUrl) throws IOException {
+    private String[] fetchData(String apiUrl) throws IOException {
 
 
         URL url = new URL(apiUrl);
@@ -105,35 +105,29 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
 
     }
 
-    private String getMovieDataFromJson(String moviesJsonStr) throws JSONException {
+    private String[] getMovieDataFromJson(String moviesJsonStr) throws JSONException {
 
 
         JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
         JSONArray moviesArray = moviesJsonObject.getJSONArray("results");
 
-        // Log.d(LOG_TAG, "moviesArray.length( = "+ moviesArray.length());
-
-
-
+        String[] posters = null;
         for (int i = 0; i < moviesArray.length(); i++) {
 
             JSONObject moviesData = moviesArray.getJSONObject(i);
-            String movie_poster_path =  moviesData.getString("poster_path");
-            Long movie_id = moviesData.getLong("id");
-            Log.d(LOG_TAG, "poster_path = " + movie_poster_path);
+            Movie movie = new Movie();
+            movie.poster_path = moviesData.getString("poster_path");
+            movie.id = moviesData.getLong("id");
+            Log.d(LOG_TAG, "poster_path = " + movie.poster_path);
 
-
-
+            posters[i] = movie.poster_path;
         }
-
-
-
 
 
         //String movie_poster_path = moviesJson.getString("poster_path");
 
 
-        return null;
+        return posters;
 
 
     }
