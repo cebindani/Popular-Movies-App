@@ -3,6 +3,10 @@ package com.cebin.popularmoviesapp;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +35,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
         return new String[0];
     }
 
-    private void fetchData(String apiUrl) throws IOException {
+    private String fetchData(String apiUrl) throws IOException {
 
 
         URL url = new URL(apiUrl);
@@ -51,7 +55,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
             inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
-                return;
+                return null;
             }
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -66,16 +70,14 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
 
             if (buffer.length() == 0) {
                 //stream was empty. Nothing to parse
-                return; //return null;
+                return null;
             }
             moviesJsonStr = buffer.toString();
             Log.d(LOG_TAG, "fetchData: " + moviesJsonStr);
 
-
-
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            return;
+            return null;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -90,8 +92,51 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
 
         }
 
+        try {
+            return getMovieDataFromJson(moviesJsonStr);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
 
+        // This will only happen if there was an error getting or parsing the forecast.
+        return null;
 
 
     }
+
+    private String getMovieDataFromJson(String moviesJsonStr) throws JSONException {
+
+
+        JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
+        JSONArray moviesArray = moviesJsonObject.getJSONArray("results");
+
+        // Log.d(LOG_TAG, "moviesArray.length( = "+ moviesArray.length());
+
+
+
+        for (int i = 0; i < moviesArray.length(); i++) {
+
+            JSONObject moviesData = moviesArray.getJSONObject(i);
+            String movie_poster_path =  moviesData.getString("poster_path");
+            Long movie_id = moviesData.getLong("id");
+            Log.d(LOG_TAG, "poster_path = " + movie_poster_path);
+
+
+
+        }
+
+
+
+
+
+        //String movie_poster_path = moviesJson.getString("poster_path");
+
+
+        return null;
+
+
+    }
+
+
 }
