@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by DanieleM on 22/04/2016.
@@ -35,7 +37,8 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
         return new String[0];
     }
 
-    private String[] fetchData(String apiUrl) throws IOException {
+
+    private List<Movie> fetchData(String apiUrl) throws IOException {
 
 
         URL url = new URL(apiUrl);
@@ -105,13 +108,14 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
 
     }
 
-    private String[] getMovieDataFromJson(String moviesJsonStr) throws JSONException {
+    private List<Movie> getMovieDataFromJson(String moviesJsonStr) throws JSONException {
 
 
         JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
         JSONArray moviesArray = moviesJsonObject.getJSONArray("results");
 
         String[] posters = null;
+        List<Movie> movieList = new ArrayList<Movie>();
         for (int i = 0; i < moviesArray.length(); i++) {
 
             JSONObject moviesData = moviesArray.getJSONObject(i);
@@ -120,14 +124,15 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
             movie.id = moviesData.getLong("id");
             Log.d(LOG_TAG, "poster_path = " + movie.poster_path);
 
-            posters[i] = movie.poster_path;
+            movieList.add(i, movie);
+
         }
 
 
         //String movie_poster_path = moviesJson.getString("poster_path");
 
 
-        return posters;
+        return movieList;
 
 
     }
