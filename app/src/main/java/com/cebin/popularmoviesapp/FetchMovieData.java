@@ -1,5 +1,6 @@
 package com.cebin.popularmoviesapp;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -24,21 +25,31 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
     private static final String LOG_TAG = FetchMoviesData.class.getSimpleName();
 
     @Override
+    protected void onPostExecute(String[] result) {
+
+
+        //faço adapter aqui?
+
+
+
+
+    }
+
+    @Override
     protected String[] doInBackground(String... params) {
 
 
         try {
-            fetchData(params[0]);
+            return fetchMoviesDataFromUrl(params[0]);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
-        return new String[0];
+        return null;
     }
 
 
-    private List<Movie> fetchData(String apiUrl) throws IOException {
+    private String[] fetchMoviesDataFromUrl(String apiUrl) throws IOException {
 
 
         URL url = new URL(apiUrl);
@@ -76,7 +87,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
                 return null;
             }
             moviesJsonStr = buffer.toString();
-            Log.d(LOG_TAG, "fetchData: " + moviesJsonStr);
+            Log.d(LOG_TAG, "fetchMoviesDataFromUrl: " + moviesJsonStr);
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -96,7 +107,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
         }
 
         try {
-            return getMovieDataFromJson(moviesJsonStr);
+            return getMoviesDataFromJson(moviesJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -108,32 +119,46 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
 
     }
 
-    private List<Movie> getMovieDataFromJson(String moviesJsonStr) throws JSONException {
+    private String[] getMoviesDataFromJson(String moviesJsonStr) throws JSONException {
 
 
         JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
         JSONArray moviesArray = moviesJsonObject.getJSONArray("results");
 
-        String[] posters = null;
-        List<Movie> movieList = new ArrayList<Movie>();
+        String[] pathArray = new String[moviesArray.length()];
+        List<Movie> moviesList = new ArrayList<Movie>();
         for (int i = 0; i < moviesArray.length(); i++) {
 
             JSONObject moviesData = moviesArray.getJSONObject(i);
             Movie movie = new Movie();
-            movie.poster_path = moviesData.getString("poster_path");
+            movie.posterPath = moviesData.getString("poster_path");
             movie.id = moviesData.getLong("id");
-            Log.d(LOG_TAG, "poster_path = " + movie.poster_path);
+            Log.d(LOG_TAG, "poster_path = " + movie.posterPath);
 
-            movieList.add(i, movie);
+            moviesList.add(i, movie);
 
+            pathArray[i] = movie.posterPath;
         }
 
+        //retornando pathArray, mas o ideal seria retornar
+        return pathArray;
+    }
 
-        //String movie_poster_path = moviesJson.getString("poster_path");
 
+    private String[] getPosterURL(String[] pathArray) {
 
-        return movieList;
+        String base_url = "http://image.tmdb.org/t/p/";
+        String imgSize = "w185";
+        //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
 
+        String[] postersUrl = new String[pathArray.length];
+        Uri uri;
+
+        for (int i = 0; i < pathArray.length; i++) {
+            uri = Uri.parse(base_url).buildUpon().path(imgSize).appendPath(pathArray[i]).build();
+            postersUrl[i] = uri.toString();
+        }
+        return postersUrl;
 
     }
 

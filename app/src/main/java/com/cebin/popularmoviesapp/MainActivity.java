@@ -54,19 +54,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String[] getPosterURL(String[] pathArray) {
 
-        String base_url = "http://image.tmdb.org/t/p/";
-        String imgSize = "w185";
-        //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-
-        String[] postersUrl = {};
-
-        for (int i = 0; i < pathArray.length; i++) {
-            postersUrl[i] = base_url + imgSize + pathArray[i];
-
-        }
-        return postersUrl;
-
-    }
 }
