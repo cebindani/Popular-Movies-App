@@ -1,6 +1,8 @@
 package com.cebin.popularmoviesapp;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +36,34 @@ public class ImageListAdapter extends ArrayAdapter {
             convertView = inflater.inflate(R.layout.grid_view_fragment, parent, false);
         }
 
-        Picasso.with(context)
-                .load(imageUrls[position])
-                .into((ImageView) convertView);
+        ImageView imageView = (ImageView) convertView;
+
+        if (TextUtils.isEmpty(imageUrls[position])) {
+            //if imageUrls is empty
+            Picasso.with(context).cancelRequest(imageView);
+        } else {
+            /* option 2: load placeholder with Picasso
+            Picasso
+                .with(context)
+                .load(R.drawable.floorplan)
+                .into(imageView);
+                */
+
+
+
+            Picasso.with(context).setIndicatorsEnabled(true);
+            Picasso.with(context)
+                    .load(imageUrls[position])
+                    .placeholder(R.drawable.placeholder)
+                    .fit()
+                    .into(imageView);
+
+
+
+            Log.d(ImageListAdapter.class.getSimpleName(), "getView: imgUrl[position] = "+imageUrls[position]);
+            Log.d(ImageListAdapter.class.getSimpleName(), "getView: view position = "+position);
+        }
+
 
         return convertView;
     }
