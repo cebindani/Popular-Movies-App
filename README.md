@@ -1,5 +1,5 @@
 # Popular-Movies-App
-Popular Movies App: 'Developing Android Apps' project final 
+Popular Movies App: 'Developing Android Apps' final project
 
 *Project Overview*
 
