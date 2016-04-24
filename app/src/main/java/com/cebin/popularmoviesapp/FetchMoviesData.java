@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +21,25 @@ import java.util.List;
 /**
  * Created by DanieleM on 22/04/2016.
  */
-class FetchMoviesData extends AsyncTask<String, Void, String[]> {
+public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, String[]> {
 
     private static final String LOG_TAG = FetchMoviesData.class.getSimpleName();
+    HttpURLConnection urlConnection = null;
+    private MyAsyncTaskListener myAsyncTaskListener;
+
+
+    public FetchMoviesData(MyAsyncTaskListener myAsyncTaskListener) {
+        this.myAsyncTaskListener = myAsyncTaskListener;
+    }
 
     @Override
-    protected void onPostExecute(String[] result) {
+    protected void onPostExecute(String[] strings) {
 
-
-        //faço adapter aqui?
-
-
-
+        try {
+            myAsyncTaskListener.onSuccess(getPosterURL(strings));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -40,7 +48,9 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
 
 
         try {
+
             return fetchMoviesDataFromUrl(params[0]);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,12 +59,17 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
     }
 
 
+    @Override
+    protected void onCancelled() {
+        urlConnection.disconnect();
+    }
+
     private String[] fetchMoviesDataFromUrl(String apiUrl) throws IOException {
 
 
         URL url = new URL(apiUrl);
 
-        HttpURLConnection urlConnection = null;
+
         InputStream inputStream = null;
         BufferedReader reader = null;
         String moviesJsonStr = null;
@@ -87,7 +102,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
                 return null;
             }
             moviesJsonStr = buffer.toString();
-            Log.d(LOG_TAG, "fetchMoviesDataFromUrl: " + moviesJsonStr);
+            //Log.d(LOG_TAG, "fetchMoviesDataFromUrl: " + moviesJsonStr);
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -133,7 +148,7 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
             Movie movie = new Movie();
             movie.posterPath = moviesData.getString("poster_path");
             movie.id = moviesData.getLong("id");
-            Log.d(LOG_TAG, "poster_path = " + movie.posterPath);
+            //Log.d(LOG_TAG, "poster_path = " + movie.posterPath);
 
             moviesList.add(i, movie);
 
@@ -145,18 +160,21 @@ class FetchMoviesData extends AsyncTask<String, Void, String[]> {
     }
 
 
-    private String[] getPosterURL(String[] pathArray) {
+    private String[] getPosterURL(String[] pathArray) throws MalformedURLException{
 
-        String base_url = "http://image.tmdb.org/t/p/";
+        String base_url = "image.tmdb.org/t/p";
         String imgSize = "w185";
         //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
 
         String[] postersUrl = new String[pathArray.length];
-        Uri uri;
+        Uri.Builder builder = new Uri.Builder();
 
         for (int i = 0; i < pathArray.length; i++) {
-            uri = Uri.parse(base_url).buildUpon().path(imgSize).appendPath(pathArray[i]).build();
-            postersUrl[i] = uri.toString();
+
+            builder.scheme("http").encodedAuthority(base_url).path(imgSize).appendEncodedPath(pathArray[i]).build();
+
+                    //Uri.parse(base_url).buildUpon().path(imgSize).appendEncodedPath(pathArray[i]).build();
+            postersUrl[i] = builder.toString();
         }
         return postersUrl;
 

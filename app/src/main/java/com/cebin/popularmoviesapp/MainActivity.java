@@ -5,21 +5,30 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyAsyncTaskListener {
+
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    ListView mListView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mListView = (ListView) findViewById(R.id.gridView);
+        //mListView.setAdapter(null);
 
         String apiUrl = "http://api.themoviedb.org/3/movie/popular?api_key=171033484fca95820ee38d32ea548f25";
         getMoviesDataFromAPI(apiUrl);
 
-        String[] moviesPosters = {
+        final String[] moviesPosters = {
                 "http://i.imgur.com/rFLNqWI.jpg",
                 "http://i.imgur.com/C9pBVt7.jpg",
                 "http://i.imgur.com/rT5vXE1.jpg",
@@ -36,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
                 "http://i.imgur.com/Z3QjilA.jpg",
         };
 
-        ListView listView = (ListView) findViewById(R.id.gridView);
-        listView.setAdapter(new ImageListAdapter(MainActivity.this, moviesPosters));
+
+
 
 
     }
+
+
 
 
     private void getMoviesDataFromAPI(String apiUrl) {
@@ -48,11 +59,25 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivity.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new FetchMoviesData().execute(apiUrl);
+            new FetchMoviesData(this).execute(apiUrl);
         } else {
             Toast.makeText(MainActivity.this, "Ops... you appear to be offline!", Toast.LENGTH_SHORT).show();
         }
     }
 
 
+    @Override
+    public void onSuccess(String[] data) {
+
+        //mListView = (ListView) findViewById(R.id.gridView);
+        Log.d(LOG_TAG, "onSuccess: data.length = "+data.length);
+        mListView.setAdapter(new ImageListAdapter(MainActivity.this, data));
+
+    }
+
+    @Override
+    public void onFailure() {
+
+        Log.d(LOG_TAG, "onFailure: ");
+    }
 }
