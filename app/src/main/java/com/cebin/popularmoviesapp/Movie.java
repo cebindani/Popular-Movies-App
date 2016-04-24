@@ -8,10 +8,10 @@ import java.util.Date;
 public class Movie {
 
     long id;
-    String poster_path = null;
+    String posterPath = null;
     String description = null;
     String title = null;
-    Date release_date = null;
+    Date releaseDate = null;
 
     public Movie() {
         super();
