@@ -6,14 +6,14 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements MyAsyncTaskListener {
 
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    ListView mListView;
+    GridView mListView;
 
 
     @Override
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mListView = (ListView) findViewById(R.id.gridView);
+        mListView = (GridView) findViewById(R.id.gridView);
         //mListView.setAdapter(null);
 
         String apiUrl = "http://api.themoviedb.org/3/movie/popular?api_key=171033484fca95820ee38d32ea548f25";
