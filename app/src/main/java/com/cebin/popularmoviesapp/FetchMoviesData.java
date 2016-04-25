@@ -160,10 +160,10 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
     }
 
 
-    private String[] getPosterURL(String[] pathArray) throws MalformedURLException{
+    private String[] getPosterURL(String[] pathArray) throws MalformedURLException {
 
         String base_url = "image.tmdb.org/t/p";
-        String imgSize = "w185";
+        String imgSize = "w342";
         //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
 
         String[] postersUrl = new String[pathArray.length];
@@ -173,7 +173,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
 
             builder.scheme("http").encodedAuthority(base_url).path(imgSize).appendEncodedPath(pathArray[i]).build();
 
-                    //Uri.parse(base_url).buildUpon().path(imgSize).appendEncodedPath(pathArray[i]).build();
+            //Uri.parse(base_url).buildUpon().path(imgSize).appendEncodedPath(pathArray[i]).build();
             postersUrl[i] = builder.toString();
         }
         return postersUrl;
