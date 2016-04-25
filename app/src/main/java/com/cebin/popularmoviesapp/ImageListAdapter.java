@@ -50,18 +50,15 @@ public class ImageListAdapter extends ArrayAdapter {
                 */
 
 
-
             Picasso.with(context).setIndicatorsEnabled(true);
             Picasso.with(context)
                     .load(imageUrls[position])
-                    .placeholder(R.drawable.placeholder)
-                    .fit()
+                    //.placeholder(R.drawable.placeholder)
                     .into(imageView);
 
 
-
-            Log.d(ImageListAdapter.class.getSimpleName(), "getView: imgUrl[position] = "+imageUrls[position]);
-            Log.d(ImageListAdapter.class.getSimpleName(), "getView: view position = "+position);
+            Log.d(ImageListAdapter.class.getSimpleName(), "getView: imgUrl[position] = " + imageUrls[position]);
+            Log.d(ImageListAdapter.class.getSimpleName(), "getView: view position = " + position);
         }
 
 
