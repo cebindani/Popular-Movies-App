@@ -163,7 +163,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
     private String[] getPosterURL(String[] pathArray) throws MalformedURLException {
 
         String base_url = "image.tmdb.org/t/p";
-        String imgSize = "w342";
+        String imgSize = "w185";
         //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
 
         String[] postersUrl = new String[pathArray.length];
