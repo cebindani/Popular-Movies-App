@@ -3,15 +3,12 @@ package com.cebin.popularmoviesapp;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MyAsyncTaskListener {
@@ -56,38 +53,17 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
 
 
 
-    private URL mountApiUrl(String path) {
-        // "http://api.themoviedb.org/3/movie/popular?api_key=171033484fca95820ee38d32ea548f25"
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .encodedAuthority("api.themoviedb.org/3")
-                .appendEncodedPath("movie")
-                .appendPath(path)
-                .appendQueryParameter("api_key", "171033484fca95820ee38d32ea548f25")
-                .build();
-        URL url = null;
-        try {
-            url = new URL(builder.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, "mountApiUrl: ",e);
-        }
-
-        return url;
-    }
-
-
     private void getMoviesDataFromAPI() {
 
-        String path = "top_rated";
-        URL apiUrl = mountApiUrl(path);
+        String apiPath = "top_rated";
 
-        Log.d(LOG_TAG, "getMoviesDataFromAPI: "+apiUrl.toString());
+
+        Log.d(LOG_TAG, "getMoviesDataFromAPI: "+apiPath);
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivity.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected() && !networkInfo.getState().equals(NetworkInfo.DetailedState.VERIFYING_POOR_LINK)) {
-            new FetchMoviesData(this).execute(apiUrl.toString());
+            new FetchMoviesData(this).execute(apiPath);
         } else {
             Toast.makeText(MainActivity.this, "Ops... you appear to be offline!", Toast.LENGTH_SHORT).show();
         }

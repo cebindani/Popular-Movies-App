@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,8 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
 
 
         try {
-            return fetchMoviesDataFromUrl(params[0]);
+
+            return fetchMoviesDataFromUrl(mountApiUrl(params[0]));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,10 +60,28 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
         urlConnection.disconnect();
     }
 
-    private List<Movie> fetchMoviesDataFromUrl(String apiUrl) throws IOException {
 
+    private URL mountApiUrl(String path) {
+        // "http://api.themoviedb.org/3/movie/popular?api_key=171033484fca95820ee38d32ea548f25"
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .encodedAuthority("api.themoviedb.org/3")
+                .appendEncodedPath("movie")
+                .appendPath(path)
+                .appendQueryParameter("api_key", "171033484fca95820ee38d32ea548f25")
+                .build();
+        URL url = null;
+        try {
+            url = new URL(builder.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "mountApiUrl: ",e);
+        }
 
-        URL url = new URL(apiUrl);
+        return url;
+    }
+
+    private List<Movie> fetchMoviesDataFromUrl(URL apiUrl) throws IOException {
 
 
         InputStream inputStream = null;
@@ -70,7 +90,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
 
 
         try {
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) apiUrl.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
