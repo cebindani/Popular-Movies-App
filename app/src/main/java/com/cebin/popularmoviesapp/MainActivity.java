@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
         // "http://api.themoviedb.org/3/movie/popular?api_key=171033484fca95820ee38d32ea548f25"
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority("api.themoviedb.org/3")
+                .encodedAuthority("api.themoviedb.org/3")
                 .appendEncodedPath("movie")
                 .appendPath(path)
                 .appendQueryParameter("api_key", "171033484fca95820ee38d32ea548f25")
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
             url = new URL(builder.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            Log.e(LOG_TAG, "mountApiUrl: ",e);
         }
 
         return url;
@@ -78,9 +79,10 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
 
     private void getMoviesDataFromAPI() {
 
-        String path = "popular";
+        String path = "top_rated";
         URL apiUrl = mountApiUrl(path);
 
+        Log.d(LOG_TAG, "getMoviesDataFromAPI: "+apiUrl.toString());
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivity.getActiveNetworkInfo();
 
