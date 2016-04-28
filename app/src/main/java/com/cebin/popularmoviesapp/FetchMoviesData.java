@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
 /**
  * Created by DanieleM on 22/04/2016.
  */
-public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, String[]> {
+public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List<Movie>> {
 
     private static final String LOG_TAG = FetchMoviesData.class.getSimpleName();
     HttpURLConnection urlConnection = null;
@@ -33,22 +32,17 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
     }
 
     @Override
-    protected void onPostExecute(String[] strings) {
+    protected void onPostExecute(List<Movie> movieList) {
 
-        try {
-            myAsyncTaskListener.onSuccess(getPosterURL(strings));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        myAsyncTaskListener.onSuccess(movieList); //getPosterURL(strings)
 
     }
 
     @Override
-    protected String[] doInBackground(String... params) {
+    protected List<Movie> doInBackground(String... params) {
 
 
         try {
-
             return fetchMoviesDataFromUrl(params[0]);
 
         } catch (IOException e) {
@@ -64,7 +58,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
         urlConnection.disconnect();
     }
 
-    private String[] fetchMoviesDataFromUrl(String apiUrl) throws IOException {
+    private List<Movie> fetchMoviesDataFromUrl(String apiUrl) throws IOException {
 
 
         URL url = new URL(apiUrl);
@@ -134,7 +128,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
 
     }
 
-    private String[] getMoviesDataFromJson(String moviesJsonStr) throws JSONException {
+    private List<Movie> getMoviesDataFromJson(String moviesJsonStr) throws JSONException {
 
 
         JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
@@ -155,12 +149,12 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, Stri
             pathArray[i] = movie.posterPath;
         }
 
-        //retornando pathArray, mas o ideal seria retornar
-        return pathArray;
+        //retornando pathArray, mas o ideal seria retornar a lista de Movies
+        return moviesList;
     }
 
 
-    private String[] getPosterURL(String[] pathArray) throws MalformedURLException {
+    private String[] getPosterURL(String[] pathArray){
 
         String base_url = "image.tmdb.org/t/p";
         String imgSize = "w185";

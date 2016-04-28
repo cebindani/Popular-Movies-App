@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MyAsyncTaskListener {
 
 
@@ -67,11 +69,16 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
 
 
     @Override
-    public void onSuccess(String[] data) {
+    public void onSuccess(List<Movie> data) {
 
         //mListView = (ListView) findViewById(R.id.gridView);
-        Log.d(LOG_TAG, "onSuccess: data.length = "+data.length);
-        mListView.setAdapter(new ImageListAdapter(MainActivity.this, data));
+        Log.d(LOG_TAG, "onSuccess: data.length = " + data.size());
+
+        String[] postersPath = new String[data.size()];
+        for (int i = 0; i < data.size(); i++) {
+            postersPath[i] = data.get(i).getPosterURL();
+        }
+        mListView.setAdapter(new ImageListAdapter(MainActivity.this, postersPath));
 
     }
 
