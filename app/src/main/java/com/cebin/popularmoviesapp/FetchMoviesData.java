@@ -75,7 +75,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
             url = new URL(builder.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            Log.e(LOG_TAG, "mountApiUrl: ",e);
+            Log.e(LOG_TAG, "mountApiUrl: ", e);
         }
 
         return url;
@@ -155,15 +155,20 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
         JSONArray moviesArray = moviesJsonObject.getJSONArray("results");
 
         String[] pathArray = new String[moviesArray.length()];
-        List<Movie> moviesList = new ArrayList<Movie>();
+        List<Movie> moviesList = new ArrayList<>();
         for (int i = 0; i < moviesArray.length(); i++) {
 
             JSONObject moviesData = moviesArray.getJSONObject(i);
+
             Movie movie = new Movie();
             movie.posterPath = moviesData.getString("poster_path");
             movie.id = moviesData.getLong("id");
-            //Log.d(LOG_TAG, "poster_path = " + movie.posterPath);
 
+            movie.originalTitle = moviesData.getString("original_title");
+            movie.posterThumbnail = moviesData.getString("backdrop_path");
+            movie.synopsis = moviesData.getString("overview");
+            movie.userRating = moviesData.getDouble("vote_average");
+            movie.releaseDate = moviesData.getString("release_date");
             moviesList.add(i, movie);
 
             pathArray[i] = movie.posterPath;
@@ -171,27 +176,6 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
 
         //retornando pathArray, mas o ideal seria retornar a lista de Movies
         return moviesList;
-    }
-
-
-    private String[] getPosterURL(String[] pathArray){
-
-        String base_url = "image.tmdb.org/t/p";
-        String imgSize = "w185";
-        //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-
-        String[] postersUrl = new String[pathArray.length];
-        Uri.Builder builder = new Uri.Builder();
-
-        for (int i = 0; i < pathArray.length; i++) {
-
-            builder.scheme("http").encodedAuthority(base_url).path(imgSize).appendEncodedPath(pathArray[i]).build();
-
-            //Uri.parse(base_url).buildUpon().path(imgSize).appendEncodedPath(pathArray[i]).build();
-            postersUrl[i] = builder.toString();
-        }
-        return postersUrl;
-
     }
 
 

@@ -2,8 +2,6 @@ package com.cebin.popularmoviesapp;
 
 import android.net.Uri;
 
-import java.util.Date;
-
 /**
  * Created by DanieleM on 23/04/2016.
  */
@@ -11,9 +9,11 @@ public class Movie {
 
     long id;
     String posterPath = null;
-    String description = null;
-    String title = null;
-    Date releaseDate = null;
+    String originalTitle = null;
+    String posterThumbnail = null;
+    String synopsis = null; //overview
+    Double userRating = 0.0; //vote_average
+    String releaseDate = null;
 
     public Movie() {
         super();
@@ -36,5 +36,6 @@ public class Movie {
         return posterUrl;
 
     }
+
 
 }
