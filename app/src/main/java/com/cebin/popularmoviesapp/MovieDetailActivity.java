@@ -1,13 +1,18 @@
 package com.cebin.popularmoviesapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity {
+
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +21,29 @@ public class MovieDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        Intent intent = getIntent();
+        Movie movie = intent.getParcelableExtra("movieDetail");
+
+        ImageView imagem = (ImageView) findViewById(R.id.poster_thumbnail);
+        TextView originalTitleTextView = (TextView) findViewById(R.id.original_title);
+        TextView synopsisTextView = (TextView) findViewById(R.id.synopsis);
+        TextView ratingTextView = (TextView) findViewById(R.id.user_rating);
+        TextView releaseDateTextView = (TextView) findViewById(R.id.release_date);
+
+        if (intent.hasExtra("movieDetail")) {
+            //imagem.setImageResource();
+            Picasso.with(context)
+                    .load("http://image.tmdb.org/t/p/w500/m5O3SZvQ6EgD5XXXLPIP1wLppeW.jpg")
+                    .into(imagem);
+
+            originalTitleTextView.setText(movie.originalTitle);
+            synopsisTextView.setText(movie.synopsis);
+            ratingTextView.setText(movie.userRating.toString());
+            releaseDateTextView.setText(movie.releaseDate);
+        }
+
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -24,7 +51,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
     }
 
 }
