@@ -35,7 +35,12 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
     @Override
     protected void onPostExecute(List<Movie> movieList) {
 
-        myAsyncTaskListener.onSuccess(movieList); //getPosterURL(strings)
+
+        if (movieList != null) {
+            myAsyncTaskListener.onSuccess(movieList); //getPosterURL(strings)
+        } else {
+            myAsyncTaskListener.onFailure();
+        }
 
     }
 
@@ -84,7 +89,8 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
     private List<Movie> fetchMoviesDataFromUrl(URL apiUrl) throws IOException {
 
 
-        InputStream inputStream = null;
+        Log.d(LOG_TAG, "fetchMoviesDataFromUrl: "+apiUrl);
+        InputStream inputStream;
         BufferedReader reader = null;
         String moviesJsonStr = null;
 
@@ -92,14 +98,17 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
         try {
             urlConnection = (HttpURLConnection) apiUrl.openConnection();
             urlConnection.setRequestMethod("GET");
+            urlConnection.setConnectTimeout(4000);
             urlConnection.connect();
 
 
+
             inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            //inputStream = null;
             if (inputStream == null) {
                 return null;
             }
+            StringBuffer buffer = new StringBuffer();
 
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -136,7 +145,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
         }
 
         try {
-            return getMoviesDataFromJson(moviesJsonStr);
+            return (moviesJsonStr != null) ? getMoviesDataFromJson(moviesJsonStr) : null;
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
