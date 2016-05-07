@@ -10,6 +10,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     Context context;
@@ -40,7 +45,19 @@ public class MovieDetailActivity extends AppCompatActivity {
             originalTitleTextView.setText(movie.originalTitle);
             synopsisTextView.setText(movie.synopsis);
             ratingTextView.setText(movie.userRating.toString());
-            releaseDateTextView.setText(movie.releaseDate);
+
+
+            SimpleDateFormat stringToDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            try {
+
+                Date date = stringToDate.parse(movie.releaseDate);
+                stringToDate = new SimpleDateFormat("dd/MM/yyyy");
+                releaseDateTextView.setText(stringToDate.format(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         }
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
