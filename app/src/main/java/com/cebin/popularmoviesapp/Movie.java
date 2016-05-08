@@ -20,19 +20,18 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
-    long id;
-    String posterPath = null;
-    String originalTitle = null;
-    String posterThumbnail = null;
-    String synopsis = null; //overview
-    Double userRating = 0.0; //vote_average
-    String releaseDate = null;
+    private long id;
+    private String posterPath = null;
+    private String originalTitle = null;
+    private String posterThumbnail = null;
+    private String synopsis = null; //overview
+    private Double userRating = 0.0; //vote_average
+    private String releaseDate = null;
 
 
     public Movie() {
         super();
     }
-
 
     public Movie(Parcel in) {
         id = in.readLong();
@@ -41,23 +40,6 @@ public class Movie implements Parcelable {
         synopsis = in.readString();
         userRating = in.readDouble();
         releaseDate = in.readString();
-
-    }
-
-    public String getPosterURL() {
-
-        String base_url = "image.tmdb.org/t/p";
-        String imgSize = "w185";
-        //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-
-
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http").encodedAuthority(base_url).path(imgSize).appendEncodedPath(posterPath).build();
-
-        //Uri.parse(base_url).buildUpon().path(imgSize).appendEncodedPath(pathArray[i]).build();
-        String posterUrl = builder.toString();
-
-        return posterUrl;
 
     }
 
@@ -74,6 +56,79 @@ public class Movie implements Parcelable {
         dest.writeString(synopsis);
         dest.writeDouble(userRating);
         dest.writeString(releaseDate);
+
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = generatePosterURL(posterPath);
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public String getPosterThumbnail() {
+        return posterThumbnail;
+    }
+
+    public void setPosterThumbnail(String posterThumbnail) {
+        this.posterThumbnail = generatePosterURL(posterThumbnail);
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
+
+    public Double getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(Double userRating) {
+        this.userRating = userRating;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    private String generatePosterURL(String imagePath) {
+
+        String base_url = "image.tmdb.org/t/p";
+        String imgSize = "w185";
+        //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
+
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http").encodedAuthority(base_url).path(imgSize).appendEncodedPath(imagePath).build();
+
+        //Uri.parse(base_url).buildUpon().path(imgSize).appendEncodedPath(pathArray[i]).build();
+        String posterUrl = builder.toString();
+
+        return posterUrl;
 
     }
 }

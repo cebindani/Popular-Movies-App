@@ -30,7 +30,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Movie movie = intent.getParcelableExtra("movieDetail");
 
-        ImageView imagem = (ImageView) findViewById(R.id.poster_thumbnail);
+        ImageView thumbnailImageView = (ImageView) findViewById(R.id.poster_thumbnail);
         TextView originalTitleTextView = (TextView) findViewById(R.id.original_title);
         TextView synopsisTextView = (TextView) findViewById(R.id.synopsis);
         TextView ratingTextView = (TextView) findViewById(R.id.user_rating);
@@ -39,18 +39,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (intent.hasExtra("movieDetail")) {
             //imagem.setImageResource();
             Picasso.with(context)
-                    .load("http://image.tmdb.org/t/p/w500/m5O3SZvQ6EgD5XXXLPIP1wLppeW.jpg")
-                    .into(imagem);
+                    .load(movie.getPosterThumbnail())
+                    .into(thumbnailImageView);
 
-            originalTitleTextView.setText(movie.originalTitle);
-            synopsisTextView.setText(movie.synopsis);
-            ratingTextView.setText(movie.userRating.toString());
+            originalTitleTextView.setText(movie.getOriginalTitle());
+            synopsisTextView.setText(movie.getSynopsis());
+            ratingTextView.setText(movie.getUserRating().toString());
 
 
             SimpleDateFormat stringToDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             try {
 
-                Date date = stringToDate.parse(movie.releaseDate);
+                Date date = stringToDate.parse(movie.getReleaseDate());
                 stringToDate = new SimpleDateFormat("dd/MM/yyyy");
                 releaseDateTextView.setText(stringToDate.format(date));
             } catch (ParseException e) {

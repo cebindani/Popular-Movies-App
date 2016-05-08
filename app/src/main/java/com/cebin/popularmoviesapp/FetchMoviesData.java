@@ -37,7 +37,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
 
 
         if (movieList != null) {
-            myAsyncTaskListener.onSuccess(movieList); //getPosterURL(strings)
+            myAsyncTaskListener.onSuccess(movieList); //generatePosterURL(strings)
         } else {
             myAsyncTaskListener.onFailure();
         }
@@ -170,17 +170,16 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
             JSONObject moviesData = moviesArray.getJSONObject(i);
 
             Movie movie = new Movie();
-            movie.posterPath = moviesData.getString("poster_path");
-            movie.id = moviesData.getLong("id");
-
-            movie.originalTitle = moviesData.getString("original_title");
-            movie.posterThumbnail = moviesData.getString("backdrop_path");
-            movie.synopsis = moviesData.getString("overview");
-            movie.userRating = moviesData.getDouble("vote_average");
-            movie.releaseDate = moviesData.getString("release_date");
+            movie.setPosterPath(moviesData.getString("poster_path"));
+            movie.setId(moviesData.getLong("id"));
+            movie.setOriginalTitle(moviesData.getString("original_title"));
+            movie.setPosterThumbnail(moviesData.getString("backdrop_path"));
+            movie.setSynopsis(moviesData.getString("overview"));
+            movie.setUserRating(moviesData.getDouble("vote_average"));
+            movie.setReleaseDate(moviesData.getString("release_date"));
             moviesList.add(i, movie);
 
-            pathArray[i] = movie.posterPath;
+            //pathArray[i] = movie.posterPath;
         }
 
         //retornando pathArray, mas o ideal seria retornar a lista de Movies

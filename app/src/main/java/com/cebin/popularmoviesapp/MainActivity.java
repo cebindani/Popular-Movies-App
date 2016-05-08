@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movieDetail = listOfMovies.get(position);
-                Toast.makeText(view.getContext(), "You clicked on "+ movieDetail.originalTitle, Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "You clicked on "+ movieDetail.getOriginalTitle(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(view.getContext(), MovieDetailActivity.class);
                 intent.putExtra("movieDetail", movieDetail);
                 startActivity(intent);
@@ -74,9 +74,10 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
         this.listOfMovies = data;
         Log.d(LOG_TAG, "onSuccess: data.length = " + listOfMovies.size());
 
+
         String[] postersPath = new String[listOfMovies.size()];
         for (int i = 0; i < listOfMovies.size(); i++) {
-            postersPath[i] = listOfMovies.get(i).getPosterURL();
+            postersPath[i] = listOfMovies.get(i).getPosterPath();
         }
         mGridView.setAdapter(new ImageListAdapter(MainActivity.this, postersPath));
 
