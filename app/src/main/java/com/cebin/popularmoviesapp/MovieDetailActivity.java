@@ -30,7 +30,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Movie movie = intent.getParcelableExtra("movieDetail");
 
-        ImageView thumbnailImageView = (ImageView) findViewById(R.id.poster_thumbnail);
+        ImageView backdropImageView = (ImageView) findViewById(R.id.backdrop_image);
+        ImageView posterImageView = (ImageView) findViewById(R.id.movie_poster_image_view);
         TextView originalTitleTextView = (TextView) findViewById(R.id.original_title);
         TextView synopsisTextView = (TextView) findViewById(R.id.synopsis);
         TextView ratingTextView = (TextView) findViewById(R.id.user_rating);
@@ -39,8 +40,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (intent.hasExtra("movieDetail")) {
             //imagem.setImageResource();
             Picasso.with(context)
-                    .load(movie.getPosterThumbnail())
-                    .into(thumbnailImageView);
+                    .load(movie.getBackdropPath())
+                    .noFade()
+                    .into(backdropImageView);
+
+            Picasso.with(context)
+                    .load(movie.getPosterPath())
+                    .noFade()
+                    .into(posterImageView);
 
             originalTitleTextView.setText(movie.getOriginalTitle());
             synopsisTextView.setText(movie.getSynopsis());

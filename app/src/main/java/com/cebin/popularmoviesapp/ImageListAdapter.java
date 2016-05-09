@@ -36,7 +36,8 @@ public class ImageListAdapter extends ArrayAdapter {
             convertView = inflater.inflate(R.layout.grid_view_fragment, parent, false);
         }
 
-        ImageView imageView = (ImageView) convertView;
+
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.movie_poster_image_view);
 
         if (TextUtils.isEmpty(imageUrls[position])) {
             //if imageUrls is empty
@@ -53,7 +54,6 @@ public class ImageListAdapter extends ArrayAdapter {
             Picasso.with(context).setIndicatorsEnabled(true);
             Picasso.with(context)
                     .load(imageUrls[position])
-                    //.placeholder(R.drawable.placeholder)
                     .into(imageView);
 
 

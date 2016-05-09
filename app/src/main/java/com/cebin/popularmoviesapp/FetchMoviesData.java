@@ -173,7 +173,7 @@ public class FetchMoviesData extends AsyncTask<String, MyAsyncTaskListener, List
             movie.setPosterPath(moviesData.getString("poster_path"));
             movie.setId(moviesData.getLong("id"));
             movie.setOriginalTitle(moviesData.getString("original_title"));
-            movie.setPosterThumbnail(moviesData.getString("backdrop_path"));
+            movie.setBackdropPath(moviesData.getString("backdrop_path"));
             movie.setSynopsis(moviesData.getString("overview"));
             movie.setUserRating(moviesData.getDouble("vote_average"));
             movie.setReleaseDate(moviesData.getString("release_date"));

@@ -23,7 +23,7 @@ public class Movie implements Parcelable {
     private long id;
     private String posterPath = null;
     private String originalTitle = null;
-    private String posterThumbnail = null;
+    private String backdropPath = null;
     private String synopsis = null; //overview
     private Double userRating = 0.0; //vote_average
     private String releaseDate = null;
@@ -35,8 +35,9 @@ public class Movie implements Parcelable {
 
     public Movie(Parcel in) {
         id = in.readLong();
+        posterPath = in.readString();
         originalTitle = in.readString();
-        posterThumbnail = in.readString();
+        backdropPath = in.readString();
         synopsis = in.readString();
         userRating = in.readDouble();
         releaseDate = in.readString();
@@ -51,8 +52,9 @@ public class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeString(posterPath);
         dest.writeString(originalTitle);
-        dest.writeString(posterThumbnail);
+        dest.writeString(backdropPath);
         dest.writeString(synopsis);
         dest.writeDouble(userRating);
         dest.writeString(releaseDate);
@@ -83,12 +85,12 @@ public class Movie implements Parcelable {
         this.originalTitle = originalTitle;
     }
 
-    public String getPosterThumbnail() {
-        return posterThumbnail;
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
-    public void setPosterThumbnail(String posterThumbnail) {
-        this.posterThumbnail = generatePosterURL(posterThumbnail);
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = generatePosterURL(backdropPath);
     }
 
     public String getSynopsis() {
@@ -118,7 +120,7 @@ public class Movie implements Parcelable {
     private String generatePosterURL(String imagePath) {
 
         String base_url = "image.tmdb.org/t/p";
-        String imgSize = "w185";
+        String imgSize = "w500";
         //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
 
 
