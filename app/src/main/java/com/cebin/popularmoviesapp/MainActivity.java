@@ -7,6 +7,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     GridView mGridView;
     List<Movie> listOfMovies = null;
+    private String urlApiPath = "popular";
 
 
     @Override
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
         mGridView = (GridView) findViewById(R.id.gridView);
 
 
-        getMoviesDataFromAPI();
+        getMoviesDataFromAPI(urlApiPath);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -48,15 +52,50 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
         });
 
 
+
+
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sortby_menu, menu);
+        return true;
+    }
 
-    private void getMoviesDataFromAPI() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.sort_popular: {
+                urlApiPath = "popular";
+                Log.i("Sort", "Sorting by popular films");
+                getMoviesDataFromAPI(urlApiPath);
+                return true;
 
-        String urlApiPath = "top_rated"; //will be changed in Settings
+            }
+            case R.id.sort_top_rated: {
+                urlApiPath = "top_rated";
+                getMoviesDataFromAPI(urlApiPath);
+                Log.i("Sort", "Sorting by top rated films");
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
 
 
-        Log.d(LOG_TAG, "getMoviesDataFromAPI: " + urlApiPath);
+        }
+
+
+    }
+
+    private void getMoviesDataFromAPI(String sortBy) {
+
+         //will be changed in Settings
+        urlApiPath = sortBy;
+
+
+        //Log.d(LOG_TAG, "getMoviesDataFromAPI: " + urlApiPath);
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivity.getActiveNetworkInfo();
 
@@ -72,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
     public void onSuccess(List<Movie> data) {
 
         this.listOfMovies = data;
-        Log.d(LOG_TAG, "onSuccess: data.length = " + listOfMovies.size());
+        //Log.d(LOG_TAG, "onSuccess: data.length = " + listOfMovies.size());
 
 
         String[] postersPath = new String[listOfMovies.size()];
@@ -89,4 +128,34 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTaskListen
         Toast.makeText(MainActivity.this, "Ops...something was wrong", Toast.LENGTH_SHORT).show();
         Log.d(LOG_TAG, "onFailure: ");
     }
+
+
+    public int getImageSize() {
+
+
+       // Log.d(LOG_TAG, "xdpi: " + this.getResources().getDisplayMetrics().xdpi);
+
+        int width = (int) this.getResources().getDisplayMetrics().xdpi;
+
+
+        String widthPath;
+        if (width <= 92)
+            widthPath = "/w92";
+        else if (width <= 154)
+            widthPath = "/w154";
+        else if (width <= 185)
+            widthPath = "/w185";
+        else if (width <= 342)
+            widthPath = "/w342";
+        else if (width <= 500)
+            widthPath = "/w500";
+        else
+            widthPath = "/w780";
+        Log.d(getClass().toString(), "imgSize: " + width + "\n widthPath: "+widthPath);
+
+        return width/2;
+
+    }
+
+
 }

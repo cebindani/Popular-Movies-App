@@ -120,7 +120,7 @@ public class Movie implements Parcelable {
     private String generatePosterURL(String imagePath) {
 
         String base_url = "image.tmdb.org/t/p";
-        String imgSize = "w500";
+        String imgSize = "w342";
         //String poster = "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
 
 
